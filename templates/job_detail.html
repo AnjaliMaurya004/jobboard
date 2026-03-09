@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h2 class="fw-bold mb-1">{{ job.title }}</h2>
+
+          <div class="d-flex flex-wrap gap-3 text-muted mb-3">
+            {% if job.company %}
+            <span><i class="bi bi-building me-1"></i>
+              <a href="/company/{{ job.company.id }}" class="text-decoration-none text-muted">{{ job.company.name }}</a>
+            </span>
+            {% endif %}
+            {% if job.location %}<span><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</span>{% endif %}
+            {% if job.salary %}<span class="text-success fw-semibold"><i class="bi bi-currency-dollar me-1"></i>{{ job.salary }}</span>{% endif %}
+          </div>
+
+          <div class="mb-3">
+            {% for tag in job.tag_list() %}
+            <span class="badge-tag me-1">{{ tag }}</span>
+            {% endfor %}
+          </div>
+
+          <hr>
+          <h5 class="fw-semibold">Job Description</h5>
+          <p style="white-space:pre-wrap;">{{ job.description }}</p>
+
+          <hr>
+          {% if user and user.role == "seeker" %}
+            {% if already_applied %}
+            <div class="alert alert-success"><i class="bi bi-check-circle me-1"></i>You have already applied for this job.</div>
+            {% else %}
+            <form method="post" action="/job/{{ job.id }}/apply">
+              <button class="btn btn-primary btn-lg px-5" type="submit">
+                <i class="bi bi-send me-2"></i>Apply Now
+              </button>
+            </form>
+            {% endif %}
+          {% elif not user %}
+          <a href="/login" class="btn btn-primary btn-lg px-5">Login to Apply</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="mt-3">
+        <a href="/jobs" class="text-muted text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Back to Jobs</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

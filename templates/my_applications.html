@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}My Applications{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h3 class="fw-bold mb-4">My Applications</h3>
+  {% if apps %}
+  <div class="table-responsive">
+    <table class="table table-hover bg-white shadow-sm rounded">
+      <thead class="table-light">
+        <tr><th>Job Title</th><th>Company</th><th>Location</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for app in apps %}
+        <tr>
+          <td class="fw-semibold">{{ app.job.title }}</td>
+          <td>{{ app.job.company.name if app.job.company else "—" }}</td>
+          <td><small class="text-muted">{{ app.job.location or "—" }}</small></td>
+          <td><span class="badge bg-warning text-dark">Applied</span></td>
+          <td><a href="/job/{{ app.job.id }}" class="btn btn-sm btn-outline-secondary">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info">You haven't applied to any jobs yet. <a href="/jobs">Browse jobs</a></div>
+  {% endif %}
+</div>
+{% endblock %}

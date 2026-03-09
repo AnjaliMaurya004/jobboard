@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}JobBoard - Find Your Dream Job{% endblock %}
+{% block content %}
+
+<div class="hero text-white py-5 mb-5">
+  <div class="container text-center py-3">
+    <h1 class="display-5 fw-bold mb-3">Find Your Next Opportunity</h1>
+    <p class="lead mb-4 opacity-75">Thousands of jobs from top companies. Start your search today.</p>
+    <form action="/jobs" method="get" class="d-flex justify-content-center gap-2">
+      <input type="text" name="search" class="form-control form-control-lg w-50" placeholder="Job title, keyword...">
+      <button class="btn btn-light btn-lg fw-semibold px-4" type="submit">Search</button>
+    </form>
+  </div>
+</div>
+
+<div class="container">
+  <h4 class="fw-bold mb-4">Latest Jobs</h4>
+  <div class="row g-4">
+    {% for job in jobs %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card job-card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">{{ job.title }}</h5>
+          {% if job.company %}
+          <p class="text-muted mb-1"><i class="bi bi-building me-1"></i>{{ job.company.name }}</p>
+          {% endif %}
+          {% if job.location %}
+          <p class="text-muted mb-1"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</p>
+          {% endif %}
+          {% if job.salary %}
+          <p class="text-success mb-2"><i class="bi bi-currency-dollar me-1"></i>{{ job.salary }}</p>
+          {% endif %}
+          <div class="mb-3">
+            {% for tag in job.tag_list() %}
+            <span class="badge-tag me-1">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          <a href="/job/{{ job.id }}" class="btn btn-outline-primary btn-sm">View Details</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="text-center mt-5">
+    <a href="/jobs" class="btn btn-primary btn-lg px-5">Browse All Jobs</a>
+  </div>
+</div>
+{% endblock %}

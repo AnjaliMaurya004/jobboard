@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Browse Jobs{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h3 class="fw-bold mb-4">Browse Jobs</h3>
+
+  <form method="get" action="/jobs" class="row g-2 mb-4">
+    <div class="col-md-6">
+      <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Search by title or keyword...">
+    </div>
+    <div class="col-md-4">
+      <input type="text" name="tag" value="{{ tag }}" class="form-control" placeholder="Filter by tag (e.g. Python)">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100" type="submit"><i class="bi bi-search"></i> Search</button>
+    </div>
+  </form>
+
+  {% if jobs %}
+  <div class="row g-4">
+    {% for job in jobs %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card job-card h-100 shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="fw-bold">{{ job.title }}</h5>
+          {% if job.company %}
+          <p class="text-muted mb-1"><i class="bi bi-building me-1"></i>{{ job.company.name }}</p>
+          {% endif %}
+          {% if job.location %}
+          <p class="text-muted mb-1"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</p>
+          {% endif %}
+          {% if job.salary %}
+          <p class="text-success mb-2 fw-semibold"><i class="bi bi-currency-dollar"></i>{{ job.salary }}</p>
+          {% endif %}
+          <div class="mb-3">
+            {% for t in job.tag_list() %}
+            <a href="/jobs?tag={{ t }}" class="badge-tag me-1 text-decoration-none">{{ t }}</a>
+            {% endfor %}
+          </div>
+          <a href="/job/{{ job.id }}" class="btn btn-outline-primary btn-sm">View Details →</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if total_pages > 1 %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% for p in range(1, total_pages + 1) %}
+      <li class="page-item {% if p == page %}active{% endif %}">
+        <a class="page-link" href="/jobs?search={{ search }}&tag={{ tag }}&page={{ p }}">{{ p }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <div class="alert alert-warning">No jobs found. Try a different search.</div>
+  {% endif %}
+</div>
+{% endblock %}

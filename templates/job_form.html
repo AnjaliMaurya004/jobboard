@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{% if job %}Edit Job{% else %}Post a Job{% endif %}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h3 class="fw-bold mb-4">{% if job %}Edit Job{% else %}Post a New Job{% endif %}</h3>
+          <form method="post" action="{% if job %}/job/{{ job.id }}/edit{% else %}/job/new{% endif %}">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Job Title *</label>
+              <input type="text" name="title" class="form-control" value="{{ job.title if job else '' }}" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Description</label>
+              <textarea name="description" class="form-control" rows="5">{{ job.description if job else '' }}</textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Location</label>
+                <input type="text" name="location" class="form-control" value="{{ job.location if job else '' }}" placeholder="e.g. Remote, New York">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Salary</label>
+                <input type="text" name="salary" class="form-control" value="{{ job.salary if job else '' }}" placeholder="e.g. $60k - $80k">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Tags <small class="text-muted">(comma-separated)</small></label>
+              <input type="text" name="tags" class="form-control" value="{{ job.tags if job else '' }}" placeholder="e.g. Python, Django, Remote">
+            </div>
+            {% if companies %}
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Company</label>
+              <select name="company_id" class="form-select">
+                <option value="">— None —</option>
+                {% for c in companies %}
+                <option value="{{ c.id }}" {% if job and job.company_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            {% else %}
+            <input type="hidden" name="company_id" value="">
+            <div class="alert alert-info mb-4">
+              <a href="/company/create">Create a company profile</a> to attach to your listings.
+            </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary w-100 fw-semibold">
+              {% if job %}Save Changes{% else %}Post Job{% endif %}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

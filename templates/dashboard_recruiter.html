@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Recruiter Dashboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-0">Welcome, {{ user.username }}!</h3>
+      <p class="text-muted">Recruiter Dashboard</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="/company/create" class="btn btn-outline-secondary"><i class="bi bi-building-add me-1"></i>Add Company</a>
+      <a href="/job/new" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Post a Job</a>
+    </div>
+  </div>
+
+  <h5 class="fw-semibold mb-3">Your Job Listings ({{ jobs|length }})</h5>
+  {% if jobs %}
+  <div class="table-responsive">
+    <table class="table table-hover bg-white shadow-sm rounded">
+      <thead class="table-light">
+        <tr>
+          <th>Title</th><th>Location</th><th>Tags</th><th>Applicants</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr>
+          <td><a href="/job/{{ job.id }}" class="fw-semibold text-decoration-none">{{ job.title }}</a></td>
+          <td><small class="text-muted">{{ job.location or "—" }}</small></td>
+          <td>{% for tag in job.tag_list() %}<span class="badge-tag me-1">{{ tag }}</span>{% endfor %}</td>
+          <td><span class="badge bg-secondary">{{ job.applications|length }}</span></td>
+          <td>
+            <a href="/job/{{ job.id }}/edit" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+            <a href="/job/{{ job.id }}/delete" class="btn btn-sm btn-outline-danger"
+               onclick="return confirm('Delete this job?')">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info">You haven't posted any jobs yet. <a href="/job/new">Post your first job!</a></div>
+  {% endif %}
+</div>
+{% endblock %}

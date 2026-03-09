@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ company.name }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+      <h2 class="fw-bold"><i class="bi bi-building me-2 text-primary"></i>{{ company.name }}</h2>
+      {% if company.website %}
+      <a href="{{ company.website }}" target="_blank" class="text-primary">{{ company.website }}</a>
+      {% endif %}
+      {% if company.description %}
+      <p class="text-muted mt-3">{{ company.description }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <h4 class="fw-bold mb-3">Open Positions ({{ jobs|length }})</h4>
+  {% if jobs %}
+  <div class="row g-3">
+    {% for job in jobs %}
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="fw-semibold">{{ job.title }}</h5>
+          {% if job.location %}<p class="text-muted mb-1"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</p>{% endif %}
+          {% if job.salary %}<p class="text-success mb-2"><i class="bi bi-currency-dollar me-1"></i>{{ job.salary }}</p>{% endif %}
+          <a href="/job/{{ job.id }}" class="btn btn-outline-primary btn-sm">View Job</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="alert alert-info">No open positions right now.</div>
+  {% endif %}
+</div>
+{% endblock %}
